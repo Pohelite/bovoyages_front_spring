@@ -10,5 +10,5 @@ import fr.bovoyages.entities.Voyage;
 
 @Repository
 public interface VoyageRepository extends JpaRepository<Voyage, Long>{
-	List<Voyage> findByClient(Payeur c);
+	List<Voyage> findByClient(Payeur c); 
 }
