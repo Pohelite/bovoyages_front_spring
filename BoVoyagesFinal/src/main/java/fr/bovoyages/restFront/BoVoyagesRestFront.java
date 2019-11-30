@@ -87,6 +87,19 @@ public class BoVoyagesRestFront {
 		}
 		return dtos;
 	}
+	
+	
+//	@PostMapping("/destinationsByRegion")
+//	public List<DestinationDTO> getDestinationByRegion(@RequestBody String region) {
+//		List<Destination> destinations = destiRepo.getByRegionStartingWith(region);
+//		List<DestinationDTO> dtos = new ArrayList<DestinationDTO>();
+//		for (Destination d : destinations) {
+//			if (d.getDeleted() != 1) {
+//				dtos.add(new DestinationDTO(d));
+//			}
+//		}
+//		return dtos;
+//	}
 
 	
 ///////////////////////////////////////////DESTINATIONS//////////////////////////////////////////////////////////
