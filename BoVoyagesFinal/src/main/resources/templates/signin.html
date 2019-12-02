@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleag.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<form th:action="@{/connexion}" th:object="${commercial}" method="post">
+User : <input th:field="*{username}" id="nom" name="nom"><br>
+Password : <input id="password" name="password" type="password">
+<button>Connexion</button>
+</form>
+</body>
+</html>

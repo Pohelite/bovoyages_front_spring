@@ -6,12 +6,14 @@ import java.util.List;
 
 import fr.bovoyages.entities.DatesVoyage;
 import fr.bovoyages.entities.Destination;
+import fr.bovoyages.entities.Image;
 
 public class DestinationDTO implements Serializable{
 	private long id;
 	private String region;
 	private String description;
 	private List<DatesVoyage> dates = new ArrayList<DatesVoyage>();
+	private List<Image> images=new ArrayList<Image>();
 	
 	public DestinationDTO(){}
 	public DestinationDTO(Destination destination) {
@@ -19,6 +21,7 @@ public class DestinationDTO implements Serializable{
 		this.region = destination.getRegion();
 		this.description = destination.getDescription();
 		this.dates=destination.getDates();
+		this.images=destination.getImages();
 	}
 	
 	public long getId() {
@@ -49,6 +52,12 @@ public class DestinationDTO implements Serializable{
 	}
 	public void setDates(List<DatesVoyage> dates) {
 		this.dates = dates;
+	}
+	public List<Image> getImages() {
+		return images;
+	}
+	public void setImages(List<Image> images) {
+		this.images = images;
 	}
 	
 	

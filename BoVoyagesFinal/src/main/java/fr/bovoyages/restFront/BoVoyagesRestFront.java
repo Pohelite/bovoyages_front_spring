@@ -26,6 +26,7 @@ import fr.bovoyages.dto.DatesVoyageDTO;
 import fr.bovoyages.dto.DestinationDTO;
 import fr.bovoyages.entities.DatesVoyage;
 import fr.bovoyages.entities.Destination;
+import fr.bovoyages.entities.Image;
 import fr.bovoyages.entities.Payeur;
 import fr.bovoyages.entities.Voyage;
 import fr.bovoyages.entities.Voyageur;
@@ -54,6 +55,7 @@ public class BoVoyagesRestFront {
 	
 	
 ///////////////////////////////////////////DESTINATIONS//////////////////////////////////////////////////////////
+	
 	@GetMapping("/api/destinations")
 	public List<DestinationDTO> getAllValidDestinations() {
 		List<Destination> destinations = destiRepo.findAll();
@@ -89,8 +91,24 @@ public class BoVoyagesRestFront {
 	}
 
 	
-///////////////////////////////////////////DESTINATIONS//////////////////////////////////////////////////////////
-	
+///////////////////////////////////////////DATES////////////////////////////////////////////////////////////
+	@GetMapping("/destination/{id}/dates")
+	public List<DatesVoyageDTO> getDatesByDestinationId(@PathVariable("id") long id){
+		Destination destination = destiRepo.findById(id).get();
+		List<DatesVoyageDTO> dtos=new ArrayList<DatesVoyageDTO>();
+		List<DatesVoyage> dates=destination.getDates();
+		for(DatesVoyage d:dates) {
+			dtos.add(new DatesVoyageDTO(d));
+		}
+		return dtos;
+	}
+///////////////////////////////////////////IMAGES//////////////////////////////////////////////////////////
+	@GetMapping("/destination-details/{id}/images")
+	public List<Image> getImagesByDestinationId(@PathVariable("id") long id){
+		Destination destination = destiRepo.findById(id).get();
+		List<Image> images=destination.getImages();
+		return images;
+	}
 	
 ///////////////////////////////////////////VOYAGES//////////////////////////////////////////////////////////
 	
