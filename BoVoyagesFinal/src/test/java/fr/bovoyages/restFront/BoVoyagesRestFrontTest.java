@@ -115,7 +115,7 @@ class BoVoyagesRestFrontTest {
 		
 		List<Voyageur> voyageurs = new ArrayList<Voyageur>();
 		voyageurs.add(voyageur);
-		voyage.setParticipants(voyageurs);//
+		voyage.setParticipants(voyageurs);///
 		
 		
 		Payeur payeur = new Payeur();
