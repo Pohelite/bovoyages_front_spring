@@ -31,7 +31,7 @@ import fr.bovoyages.entities.Voyage;
 import fr.bovoyages.entities.Voyageur;
 
 @RestController
-//@CrossOrigin(origins="http://localhost:4200")
+@CrossOrigin(origins="http://localhost:4200")
 public class BoVoyagesRestFront {
 	@Autowired
 	private DestinationRepository destiRepo;
@@ -100,6 +100,21 @@ public class BoVoyagesRestFront {
 //		}
 //		return dtos;
 //	}
+	
+	// récupération des dates pour une destination donnée
+	@GetMapping("/destination/{id}/dates")
+	public List<DatesVoyageDTO> getDatesByDestinationId(@PathVariable("id") long id){
+		Destination destination = destiRepo.findById(id).get();
+		List<DatesVoyageDTO> dtos=new ArrayList<DatesVoyageDTO>();
+		List<DatesVoyage> dates=destination.getDates();
+		for(DatesVoyage d:dates) {
+			dtos.add(new DatesVoyageDTO(d));
+		}
+		return dtos;
+	}
+
+	
+	
 
 	
 ///////////////////////////////////////////DESTINATIONS//////////////////////////////////////////////////////////
@@ -118,6 +133,8 @@ public class BoVoyagesRestFront {
 		datesVoyageRepo.save(dates);
 		List<Voyageur> listeVoyageurs = voyage.getParticipants();
 		listeVoyageurs.add(voyageur);
+		//methode ajoutee
+		voyageRepo.save(voyageur);
 		voyage.setParticipants(listeVoyageurs);
 		return voyage;
 	}

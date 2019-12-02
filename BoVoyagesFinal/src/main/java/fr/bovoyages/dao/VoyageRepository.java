@@ -7,8 +7,11 @@ import org.springframework.stereotype.Repository;
 
 import fr.bovoyages.entities.Payeur;
 import fr.bovoyages.entities.Voyage;
+import fr.bovoyages.entities.Voyageur;
 
 @Repository
 public interface VoyageRepository extends JpaRepository<Voyage, Long>{
-	List<Voyage> findByClient(Payeur c); 
+	List<Voyage> findByClient(Payeur c);
+
+	void save(Voyageur voyageur); 
 }

@@ -2,6 +2,10 @@ package fr.bovoyages.restFront;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.ws.rs.client.Client;
@@ -14,7 +18,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import fr.bovoyages.dto.DestinationDTO;
+import fr.bovoyages.entities.DatesVoyage;
 import fr.bovoyages.entities.Destination;
+import fr.bovoyages.entities.Payeur;
 import fr.bovoyages.entities.Voyage;
 import fr.bovoyages.entities.Voyageur;
 
@@ -34,7 +40,7 @@ class BoVoyagesRestFrontTest {
 //		LOG.info("3");
 		Destination[] destinations = target.request("application/json;charset=utf-8").get(Destination[].class);	
 //		LOG.info("4");
-		assertTrue(destinations.length==4);
+		assertTrue(destinations.length>0);
 }
 
 	@Test
@@ -62,7 +68,13 @@ class BoVoyagesRestFrontTest {
 //	}
 
 	@Test
+	//
 	void testAddvoyageursPessimistic() {
+		//le nombre de places diminue
+//		Voyage voyage = voyageRepository.findById(1).get();
+//		DatesVoyage dates=voyage.getDateVoyage();
+//		dates.setNbrePlaces(dates.getNbrePlaces() - 1);
+		
 		Client client = ClientBuilder.newClient();
 		WebTarget target = client.target(WEB_APPLI+"/voyage/1/addVoyageursPessimistic");
 		Voyageur voyageur = new Voyageur();
@@ -81,10 +93,41 @@ class BoVoyagesRestFrontTest {
 //		fail("Not yet implemented");
 //	}
 //
-//	@Test
-//	void testOrderVoyage() {
-//		fail("Not yet implemented");
-//	}
+	
+	@Test
+	void testOrderVoyage() {
+		Client client = ClientBuilder.newClient();
+		WebTarget target = client.target(WEB_APPLI+"/voyage/order");	
+		
+		Voyage voyage = new Voyage();//
+		
+		DatesVoyage dateVoyage = new DatesVoyage();
+		Date date = new Date();
+		date.toInstant();
+		dateVoyage.setDateAller(date);
+		dateVoyage.setDateRetour(date);
+		voyage.setDateVoyage(dateVoyage);
+
+		Voyageur voyageur = new Voyageur();
+		voyageur.setCivilite("M");
+		voyageur.setNom("Durand");
+		voyageur.setPrenom("Michel");
+		
+		List<Voyageur> voyageurs = new ArrayList<Voyageur>();
+		voyageurs.add(voyageur);
+		voyage.setParticipants(voyageurs);//
+		
+		
+		Payeur payeur = new Payeur();
+		payeur.setNom("Jacques");
+		payeur.setMail("jacques@gmail.com");
+		voyage.setClient(payeur);//
+
+		Voyage voyageReponse = target.request("application/json;charset=utf-8")
+				.post(Entity.entity(voyage, MediaType.APPLICATION_JSON), Voyage.class);
+		assertNotNull(voyage);
+
+	}
 //
 //	@Test
 //	void testGetVoyageById() {

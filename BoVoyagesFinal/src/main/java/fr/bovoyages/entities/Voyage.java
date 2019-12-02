@@ -29,7 +29,7 @@ public class Voyage {
 	@Column(name = "descriptif")
 	private String descriptif;
 	@Column(name="prix_total")
-	private float prixTotal;
+	private Float prixTotal;
 	@JoinColumn(name = "fk_client")
 	@ManyToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
 	private Payeur client;
