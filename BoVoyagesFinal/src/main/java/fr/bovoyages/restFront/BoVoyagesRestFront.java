@@ -31,7 +31,7 @@ import fr.bovoyages.entities.Voyage;
 import fr.bovoyages.entities.Voyageur;
 
 @RestController
-@CrossOrigin(origins="http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 public class BoVoyagesRestFront {
 	@Autowired
 	private DestinationRepository destiRepo;
@@ -51,8 +51,6 @@ public class BoVoyagesRestFront {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	
-	
 ///////////////////////////////////////////DESTINATIONS//////////////////////////////////////////////////////////
 	@GetMapping("/api/destinations")
 	public List<DestinationDTO> getAllValidDestinations() {
@@ -87,8 +85,7 @@ public class BoVoyagesRestFront {
 		}
 		return dtos;
 	}
-	
-	
+
 //	@PostMapping("/destinationsByRegion")
 //	public List<DestinationDTO> getDestinationByRegion(@RequestBody String region) {
 //		List<Destination> destinations = destiRepo.getByRegionStartingWith(region);
@@ -100,40 +97,35 @@ public class BoVoyagesRestFront {
 //		}
 //		return dtos;
 //	}
-	
+
 	// récupération des dates pour une destination donnée
 	@GetMapping("/destination/{id}/dates")
-	public List<DatesVoyageDTO> getDatesByDestinationId(@PathVariable("id") long id){
+	public List<DatesVoyageDTO> getDatesByDestinationId(@PathVariable("id") long id) {
 		Destination destination = destiRepo.findById(id).get();
-		List<DatesVoyageDTO> dtos=new ArrayList<DatesVoyageDTO>();
-		List<DatesVoyage> dates=destination.getDates();
-		for(DatesVoyage d:dates) {
+		List<DatesVoyageDTO> dtos = new ArrayList<DatesVoyageDTO>();
+		List<DatesVoyage> dates = destination.getDates();
+		for (DatesVoyage d : dates) {
 			dtos.add(new DatesVoyageDTO(d));
 		}
 		return dtos;
 	}
 
-	
-	
-
-	
 ///////////////////////////////////////////DESTINATIONS//////////////////////////////////////////////////////////
-	
-	
+
 ///////////////////////////////////////////VOYAGES//////////////////////////////////////////////////////////
-	
+
 //cette méthode devra être appelée à chaque fois que le client ajoute un
 //voyageur à son voyage
 //afin de décrémenter le nombre de places disponibles pour les dates choisies
 	@PostMapping("/voyage/{id}/addVoyageursPessimistic")
 	public Voyage addvoyageursPessimistic(@PathVariable("id") long id, @RequestBody Voyageur voyageur) {
 		Voyage voyage = voyageRepo.findById(id).get();
-		DatesVoyage dates=voyage.getDateVoyage();
+		DatesVoyage dates = voyage.getDateVoyage();
 		dates.setNbrePlaces(dates.getNbrePlaces() - 1);
 		datesVoyageRepo.save(dates);
 		List<Voyageur> listeVoyageurs = voyage.getParticipants();
 		listeVoyageurs.add(voyageur);
-		//methode ajoutee
+		// methode ajoutee
 		voyageRepo.save(voyageur);
 		voyage.setParticipants(listeVoyageurs);
 		return voyage;
@@ -143,22 +135,22 @@ public class BoVoyagesRestFront {
 //afin de supprimer de la base le voyage et les voyageurs qu'il aura ajouté à son voyage
 	@DeleteMapping("/voyage/cancel")
 	public String deleteVoyagePessimistic(@RequestBody Voyage voyage) {
-		DatesVoyage dates=voyage.getDateVoyage();
+		DatesVoyage dates = voyage.getDateVoyage();
 		dates.setNbrePlaces(dates.getNbrePlaces() + voyage.getParticipants().size());
 		datesVoyageRepo.save(dates);
 		voyageRepo.delete(voyage);
 		return "La commande de votre voyage a bien été annulée";
 	}
-	
+
 	@PostMapping("/voyage/order")
 	public Voyage orderVoyage(@RequestBody Voyage voyage) {
-		DatesVoyage dates=voyage.getDateVoyage();
-		if(dates.getNbrePlaces()<voyage.getParticipants().size()) {
+		DatesVoyage dates = voyage.getDateVoyage();
+		if (dates.getNbrePlaces() < voyage.getParticipants().size()) {
 			return null;
 		}
-		voyage.setPrixTotal(dates.getPrixHT()*voyage.getParticipants().size());
+		voyage.setPrixTotal(dates.getPrixHT() * voyage.getParticipants().size());
 		voyageRepo.save(voyage);
-		Payeur client =voyage.getClient();
+		Payeur client = voyage.getClient();
 		String mailClient = client.getMail();
 		// envoi du mail de confirmation
 		SimpleMailMessage mail = new SimpleMailMessage();
@@ -177,7 +169,7 @@ public class BoVoyagesRestFront {
 		Voyage v = voyageRepo.findById(id).get();
 		return v;
 	}
-	
+
 	@GetMapping("/voyage/{id}/voyageurs")
 	public List<Voyageur> getVoyageVoyageurs(@PathVariable("id") long id) {
 		Voyage voyage = voyageRepo.findById(id).get();
@@ -191,43 +183,57 @@ public class BoVoyagesRestFront {
 		voyageRepo.save(voyage);
 		return voyage;
 	}
-	
-	
+
 ///////////////////////////////////////////CLIENT/USER/////////////////////////////////////////////////////////
-	
+
 	@PostMapping("/client/allVoyages")
-	public List<Voyage> getClientVoyages(@RequestBody Payeur client){
+	public List<Voyage> getClientVoyages(@RequestBody Payeur client) {
 		return voyageRepo.findByClient(client);
 	}
 
 	@PostMapping("/client/new")
-	public String newClient(@RequestParam("nom") String nom, @RequestParam("mail") String mail, @RequestParam("password") String password) {
-		if(payeurRepo.findByNom(nom)!=null) {
+	public String newClient(@RequestParam("nom") String nom, @RequestParam("mail") String mail,
+			@RequestParam("password") String password) {
+		if (payeurRepo.findByNom(nom) != null) {
 			return "User already exists";
-		}else if(payeurRepo.findByMail(mail)!=null) {
+		} else if (payeurRepo.findByMail(mail) != null) {
 			return "Email already exists";
-		}
-		else {
-			payeurRepo.persistUser(nom, mail,password);	
+		} else {
+			payeurRepo.persistUser(nom, mail, password);
 			return "User created";
 		}
 	}
-	
+
+//	@PostMapping("/connexion")
+//	public String checkUserCredentials(@RequestParam("nom") String nom, @RequestParam("password") String password) {
+//		String msg = "coucou" + nom + password;
+//		if (payeurRepo.findByNom(nom) != null) {
+//			if (password.equals(payeurRepo.getClientPassword(nom))) {
+//				msg = "ok";
+//			} else {
+//				msg = "Mot de passe incorrect";
+//			}
+//		} else {
+//			msg = "Nom d'utilisateur incorrect";
+//		}
+//
+//		return msg;
+//	}
 
 	@PostMapping("/connexion")
-	public String checkUserCredentials(@RequestParam("nom") String nom, @RequestParam("password") String password) {
-		String msg = "coucou" + nom + password;
-		if (payeurRepo.findByNom(nom) != null) {
-			if (password.equals(payeurRepo.getClientPassword(nom))) {
-				msg = "ok";
+	public Boolean checkUserCredentials(@RequestBody Identifiants identifiants) {
+		String id = identifiants.getIdentifiant();
+		String pwd = identifiants.getPassword();
+		String msg = "coucou" + id;
+		if (payeurRepo.findByNom(id) != null) {
+			if (pwd.equals(payeurRepo.getClientPassword(id))) {
+				return true;
 			} else {
-				msg = "Mot de passe incorrect";
+				return false;
 			}
 		} else {
-			msg = "Nom d'utilisateur incorrect";
+			return false;
 		}
-
-		return msg;
 	}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -251,49 +257,48 @@ public class BoVoyagesRestFront {
 		destiRepo.save(destination);
 		return new DestinationDTO(destination);
 	}
-	
+
 	@PostMapping("/destination/delete")
 	public DestinationDTO deleteDestination(@RequestBody Destination destination) {
 		destination.setDeleted(1);
 		destiRepo.save(destination);
 		return new DestinationDTO(destination);
 	}
-	
+
 	@PostMapping("/destination/{id}/dates/add")
-	public DestinationDTO addDatesVoyagesToDestination(@PathVariable("id") long idDest, @RequestBody DatesVoyage newDates) {
-		Destination destination=destiRepo.findById(idDest).get();
-		List<DatesVoyage> listeDates=destination.getDates();
+	public DestinationDTO addDatesVoyagesToDestination(@PathVariable("id") long idDest,
+			@RequestBody DatesVoyage newDates) {
+		Destination destination = destiRepo.findById(idDest).get();
+		List<DatesVoyage> listeDates = destination.getDates();
 		listeDates.add(newDates);
 		destination.setDates(listeDates);
 		destiRepo.save(destination);
 		return new DestinationDTO(destination);
 	}
-	
+
 	@PostMapping("/destination/{id}/dates/update")
-	public DestinationDTO updateDatesVoyagesToDestination(@PathVariable("id") long idDest, @RequestBody DatesVoyage datesToUpdate) {
-		Destination destination=destiRepo.findById(idDest).get();
-		List<DatesVoyage> listeDates=destination.getDates();
-		long oldIdDates=datesToUpdate.getId();
+	public DestinationDTO updateDatesVoyagesToDestination(@PathVariable("id") long idDest,
+			@RequestBody DatesVoyage datesToUpdate) {
+		Destination destination = destiRepo.findById(idDest).get();
+		List<DatesVoyage> listeDates = destination.getDates();
+		long oldIdDates = datesToUpdate.getId();
 		datesVoyageRepo.delete(datesVoyageRepo.findById(oldIdDates).get());
 		datesToUpdate.setId(oldIdDates);
 		listeDates.add(datesToUpdate);
 		destination.setDates(listeDates);
 		destiRepo.save(destination);
 		return new DestinationDTO(destination);
-	}	
-	
-	
-	
+	}
+
 	@PostMapping("/destination/{id}/dates/delete")
-	public DestinationDTO deleteDatesVoyagesToDestination(@PathVariable("id") long idDest, @RequestBody DatesVoyage datesToErase) {
-		Destination destination=destiRepo.findById(idDest).get();
-		List<DatesVoyage> listeDates=destination.getDates();
+	public DestinationDTO deleteDatesVoyagesToDestination(@PathVariable("id") long idDest,
+			@RequestBody DatesVoyage datesToErase) {
+		Destination destination = destiRepo.findById(idDest).get();
+		List<DatesVoyage> listeDates = destination.getDates();
 		listeDates.remove(datesToErase);
 		destination.setDates(listeDates);
 		destiRepo.save(destination);
 		return new DestinationDTO(destination);
 	}
-	
-	
 
 }
