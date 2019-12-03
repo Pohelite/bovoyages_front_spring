@@ -99,7 +99,7 @@ public class BoVoyagesRestFront {
 //	}
 
 	// récupération des dates pour une destination donnée
-	@GetMapping("/destination/{id}/dates")
+	@GetMapping("/destination/dates/{id}")
 	public List<DatesVoyageDTO> getDatesByDestinationId(@PathVariable("id") long id) {
 		Destination destination = destiRepo.findById(id).get();
 		List<DatesVoyageDTO> dtos = new ArrayList<DatesVoyageDTO>();
