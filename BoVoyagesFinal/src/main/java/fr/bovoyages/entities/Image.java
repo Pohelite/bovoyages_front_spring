@@ -30,7 +30,7 @@ public class Image {
 		return fkDestination;
 	}
 
-	public void setFkDestination(long fkDestination) {
+	public void setFkDestination(long fkDestination) { 
 		this.fkDestination = fkDestination;
 	}
 
