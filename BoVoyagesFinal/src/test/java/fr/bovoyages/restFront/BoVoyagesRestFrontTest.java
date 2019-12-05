@@ -94,40 +94,40 @@ class BoVoyagesRestFrontTest {
 //	}
 //
 	
-//	@Test
-//	void testOrderVoyage() {
-//		Client client = ClientBuilder.newClient();
-//		WebTarget target = client.target(WEB_APPLI+"/voyage/order");	
-//		
-//		Voyage voyage = new Voyage();//
-//		
-//		DatesVoyage dateVoyage = new DatesVoyage();
-//		Date date = new Date();
-//		date.toInstant();
-//		dateVoyage.setDateAller(date);
-//		dateVoyage.setDateRetour(date);
-//		voyage.setDateVoyage(dateVoyage);
-//
-//		Voyageur voyageur = new Voyageur();
-//		voyageur.setCivilite("M");
-//		voyageur.setNom("Durand");
-//		voyageur.setPrenom("Michel");
-//		
-//		List<Voyageur> voyageurs = new ArrayList<Voyageur>();
-//		voyageurs.add(voyageur);
-//		voyage.setParticipants(voyageurs);///
-//		
-//		
-//		Payeur payeur = new Payeur();
-//		payeur.setNom("Jacques");
-//		payeur.setMail("jacques@gmail.com");
-//		voyage.setClient(payeur);//
-//
-//		Voyage voyageReponse = target.request("application/json;charset=utf-8")
-//				.post(Entity.entity(voyage, MediaType.APPLICATION_JSON), Voyage.class);
-//		assertNotNull(voyage);
-//
-//	}
+	@Test
+	void testOrderVoyage() {
+		Client client = ClientBuilder.newClient();
+		WebTarget target = client.target(WEB_APPLI+"/voyage/order");	
+		
+		Voyage voyage = new Voyage();//
+		
+		DatesVoyage dateVoyage = new DatesVoyage();
+		Date date = new Date();
+		date.toInstant();
+		dateVoyage.setDateAller(date);
+		dateVoyage.setDateRetour(date);
+		voyage.setDateVoyage(dateVoyage);
+
+		Voyageur voyageur = new Voyageur();
+		voyageur.setCivilite("M");
+		voyageur.setNom("Durand");
+		voyageur.setPrenom("Michel");
+		
+		List<Voyageur> voyageurs = new ArrayList<Voyageur>();
+		voyageurs.add(voyageur);
+		voyage.setParticipants(voyageurs);///
+		
+		
+		Payeur payeur = new Payeur();
+		payeur.setNom("Jacques");
+		payeur.setMail("jacques@gmail.com");
+		voyage.setClient(payeur);//
+
+		Voyage voyageReponse = target.request("application/json;charset=utf-8")
+				.post(Entity.entity(voyage, MediaType.APPLICATION_JSON), Voyage.class);
+		assertNotNull(voyageReponse);
+
+	}
 //
 //	@Test
 //	void testGetVoyageById() {

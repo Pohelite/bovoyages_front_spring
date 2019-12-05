@@ -26,6 +26,7 @@ import fr.bovoyages.dto.DatesVoyageDTO;
 import fr.bovoyages.dto.DestinationDTO;
 import fr.bovoyages.entities.DatesVoyage;
 import fr.bovoyages.entities.Destination;
+import fr.bovoyages.entities.Image;
 import fr.bovoyages.entities.Payeur;
 import fr.bovoyages.entities.Voyage;
 import fr.bovoyages.entities.Voyageur;
@@ -109,7 +110,8 @@ public class BoVoyagesRestFront {
 		}
 		return dtos;
 	}
-
+	
+	
 ///////////////////////////////////////////DESTINATIONS//////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////VOYAGES//////////////////////////////////////////////////////////
@@ -148,19 +150,20 @@ public class BoVoyagesRestFront {
 		if (dates.getNbrePlaces() < voyage.getParticipants().size()) {
 			return null;
 		}
-		voyage.setPrixTotal(dates.getPrixHT() * voyage.getParticipants().size());
+		float prixTotal=dates.getPrixHT() * voyage.getParticipants().size();
+		voyage.setPrixTotal(prixTotal);
 		voyageRepo.save(voyage);
-		Payeur client = voyage.getClient();
-		String mailClient = client.getMail();
+//		Payeur client = voyage.getClient();
+//		String mailClient = client.getMail();
 		// envoi du mail de confirmation
-		SimpleMailMessage mail = new SimpleMailMessage();
-		mail.setTo(mailClient);
-		mail.setFrom("no-reply@bovoyages.net");
-		mail.setSubject("Merci pour votre commande");
-		mail.setText("Très cher " + client.getNom() + ",\n\nBoVoyages vous remercie pour votre commande."
-				+ "\nVous recevrez très prochainement un courrier avec vos billets et les détails de votre voyage"
-				+ "\n\nLe Président,\nEmmanuel Macron");
-		mailSender.send(mail);
+//		SimpleMailMessage mail = new SimpleMailMessage();
+//		mail.setTo(mailClient);
+//		mail.setFrom("no-reply@bovoyages.net");
+//		mail.setSubject("Merci pour votre commande");
+//		mail.setText("Très cher " + client.getNom() + ",\n\nBoVoyages vous remercie pour votre commande."
+//				+ "\nVous recevrez très prochainement un courrier avec vos billets et les détails de votre voyage"
+//				+ "\n\nLe Président,\nEmmanuel Macron");
+//		mailSender.send(mail);
 		return voyage;
 	}
 
@@ -184,6 +187,20 @@ public class BoVoyagesRestFront {
 		return voyage;
 	}
 
+///////////////////////////////////////////IMAGES//////////////////////////////////////////////////////////
+	@GetMapping("/destination-details/images/{id}")
+	public List<Image> getImagesByDestinationId(@PathVariable("id") long id) {
+		Destination destination = destiRepo.findById(id).get();
+		List<Image> images = destination.getImages();
+		return images;
+	}
+	
+	
+	
+	
+	
+	
+	
 ///////////////////////////////////////////CLIENT/USER/////////////////////////////////////////////////////////
 
 	@PostMapping("/client/allVoyages")

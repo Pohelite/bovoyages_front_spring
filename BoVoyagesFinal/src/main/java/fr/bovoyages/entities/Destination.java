@@ -39,6 +39,17 @@ public class Destination implements Serializable{
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true,fetch=FetchType.LAZY)
 	@JoinColumn(name="fk_destination")
 	private List<DatesVoyage> dates=new ArrayList<DatesVoyage>();
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true,fetch=FetchType.LAZY)
+	@JoinColumn(name="fk_destination")
+	private List<Image> images=new ArrayList<Image>();
+
+	public List<Image> getImages() {
+		return images;
+	}
+
+	public void setImages(List<Image> images) {
+		this.images = images;
+	}
 
 	public Destination() {
 	}

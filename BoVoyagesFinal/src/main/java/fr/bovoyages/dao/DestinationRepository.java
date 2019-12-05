@@ -10,4 +10,6 @@ import fr.bovoyages.entities.Destination;
 @Repository
 public interface DestinationRepository extends JpaRepository<Destination, Long>{
 	List<Destination> getByRegionStartingWith(String region);
+
+	//List<Destination> getValidDestinations();
 }
