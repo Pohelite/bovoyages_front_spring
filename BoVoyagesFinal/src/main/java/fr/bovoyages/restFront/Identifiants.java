@@ -24,7 +24,7 @@ public class Identifiants {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
+	} 
 	
 	
 
